@@ -1,0 +1,103 @@
+{
+    "Nav":[["회사소개", "사업소개", "제품소개", "고객센터"],["/company","/business","/product","/service"]],
+    "SubMenu":[
+        ["인사말", "연혁", "내부전경", "오시는길"],
+        ["사업소개1", "사업소개2", "사업소개3"],
+        ["제품소개1", "제품소개2", "제품소개3"],
+        ["공지사항", "온라인상담", "질문과답변", "갤러리"]
+    ],
+    "SubMenuLink":[
+        ["/company/greetings","/company/history","/company/interior","/company/direction"],
+        ["/business/business1","/business/business2","/business/business3"],
+        ["/product/product1","/product/product2","/product/product3"],
+        ["/service/notice","/service/online","/service/qna","/service/gallery"]
+    ],
+    "CompanyInfo":[
+        {
+            "title" : "인사말",
+            "desc" : "인사말 뭐시기저시기",
+            "icon" : "building"
+        },
+        {
+            "title" : "연혁",
+            "desc" : "연혁 뭐시기저시기",
+            "icon" : "history"
+        },
+        {
+            "title" : "비전",
+            "desc" : "비전 뭐시기저시기",
+            "icon" : "paper-plane"
+        },
+        {
+            "title" : "인증서",
+            "desc" : "인증서 뭐시기저시기",
+            "icon" : "medal"
+        }
+    ],
+    "Content_1":[
+        {
+            "img": "https://via.placeholder.com/280x340",
+            "title": "컨텐츠 제목 1",
+            "desc" : "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat quam adipisci inventore natus facere repudiandae ipsum laudantium deserunt expedita, consequuntur ducimus, totam rem dignissimos eius libero atque asperiores quo minus."
+        },
+        {
+            "img": "https://via.placeholder.com/280x340/053",
+            "title": "컨텐츠 제목 2",
+            "desc" : "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat quam adipisci inventore natus facere repudiandae ipsum laudantium deserunt expedita, consequuntur ducimus, totam rem dignissimos eius libero atque asperiores quo minus."
+        },
+        {
+            "img": "https://via.placeholder.com/280x340/123",
+            "title": "컨텐츠 제목 3",
+            "desc" : "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat quam adipisci inventore natus facere repudiandae ipsum laudantium deserunt expedita, consequuntur ducimus, totam rem dignissimos eius libero atque asperiores quo minus."
+        },
+        {
+            "img": "https://via.placeholder.com/280x340/234",
+            "title": "컨텐츠 제목 4",
+            "desc" : "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat quam adipisci inventore natus facere repudiandae ipsum laudantium deserunt expedita, consequuntur ducimus, totam rem dignissimos eius libero atque asperiores quo minus."
+        }
+    ],
+    "Different":[
+        {
+            "title" : "설립일",
+            "number" : "2017",
+            "en" : "Date of Foundation"
+        },
+        {
+            "title" : "직원수",
+            "number" : "123",
+            "en" : "Employees"
+        },
+        {
+            "title" : "계약체결",
+            "number" : "845",
+            "en" : "Contract Conclusion"
+        },
+        {
+            "title" : "견적문의",
+            "number" : "539",
+            "en" : "Request for a Quote"
+        }
+    ],
+    "Management":[
+        {
+            "title": "Web/Mobile",
+            "desc": "웹과 모바일 제작 및 사이트 구축",
+            "icon":"desktop"
+        },
+        {
+            "title": "Hybrid App",
+            "desc": "안드로이드/IOS 하이브리드 앱 개발",
+            "icon":"mobile"
+        },
+        {
+            "title": "Cafe/Blog",
+            "desc": "다음/네이버/티스토리 등 블로그 개설",
+            "icon":"comment"
+        },
+        {
+            "title": "Design",
+            "desc": "옥외광고, 지하철광고, 버스광고, 택시광고",
+            "icon":"taxi"
+        }
+    ]
+}
