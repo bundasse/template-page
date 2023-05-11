@@ -3,7 +3,7 @@
         <div class="py-24 pt-48 text-center basis-full">
             <h3 class="text-3xl font-bold relative mb-5 after:absolute after:h-0.5 after:w-16 after:bg-slate-800 after:-bottom-2 after:left-2/4 after:-translate-x-2/4">회원가입</h3>
         </div>
-        <div class="w-full lg:w-1/4 mx-auto flex flex-wrap justify-between mb-20 px-[2%] sm:px-0">
+        <div class="w-full lg:w-1/4 mx-auto flex flex-wrap justify-between mb-20 px-[2%] lg:px-0">
             <label class="basis-1/4 font-bold" for="email">이메일</label>
             <input class="border p-2 rounded basis-3/4 mb-2" type="text" v-model="email" id="email">
             <label class="basis-1/4 font-bold" for="password">비밀번호</label>
@@ -31,6 +31,7 @@ export default {
                 result.user.updateProfile({displayName: this.nickname})
                 console.log(result);
                 console.log(result.user);
+                this.$router.replace('/login');
             })
         }
     },

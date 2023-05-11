@@ -4,7 +4,8 @@
         <p class="text-gray-400">{{desc[2]}}</p>
     </div>
     <ul class="flex gap-2 mb-10 w-full">
-        <li v-for="e in dataList" :key="e" class="p-5 border rounded-lg basis-[24.5%]">
+        <li v-for="e in dataList" :key="e" class="p-5 border rounded-lg basis-[32.5%]">
+            <p><span v-for="el in e.tags" :key="el" class="px-2 border rounded-lg text-sm border-rose-500 text-rose-500 mr-2">{{el}}</span></p>
             <h3 class="text-xl font-bold">{{e.name}}</h3>
             <p>{{e.price}}</p>
         </li>

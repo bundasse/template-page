@@ -5,23 +5,25 @@
                 <router-link to="/"><img src="https://via.placeholder.com/120x60" alt="로고"></router-link>
             </div>
             <div class="hidden lg:flex justify-between basis-2/3 items-center">
-                <ul class="flex basis-2/3 justify-between">
+                <ul class="flex basis-3/5 justify-between">
                     <li v-for="(e,index) in NavList[0]" :key="e" class="relative basis-1/4 text-center" @mouseout="NavSelectIndex = null" @mouseover="NavSelectIndex = index; SubMenu(index)" :class="NavSelectIndex === index && 'font-bold'"><router-link :to="NavList[1][index]" class="text-base hover:font-bold">{{ e }}<font-awesome-icon icon="chevron-down" class="transition-all duration-500 text-xs align-baseline" :class="NavSelectIndex === index && 'rotate-180'" /></router-link>
                         <ul class="absolute w-36 bg-slate-800 h-0 overflow-hidden transition-all duration-500 sub_list" :style="NavSelectIndex === index && isSubMenu">
                             <li v-for="(el,i) in SubList[index]" :key="el" class="h-[44px] pt-2 items-center"><router-link :to="SubMenuLink[index][i]" class="text-sm text-white/90 font-medium hover:font-bold">{{ el }}</router-link></li>
                         </ul>
                     </li>
                 </ul>
-                <ul class="flex gap-x-5">
-                    <li v-if="!$store.state.loginChk"><router-link to="/login" class="text-sm"> <font-awesome-icon icon="lock" /> 로그인</router-link></li>
-                    <li v-else><router-link to="/" class="text-sm" @click="logOut"><font-awesome-icon icon="arrow-right-from-bracket" />로그아웃</router-link></li>
-                    <li><router-link to="/member" class="text-sm"><font-awesome-icon icon="user" />회원가입</router-link></li>
+                <span v-if="$store.state.loginChk" class="bold text-indigo-600 font-bold text-sm">{{ this.$store.state.displayName }}</span>
+                <ul class="flex gap-x-3">
+                    <li v-if="$store.state.loginChk"><router-link to="/" class="text-sm hover:text-indigo-600" @click="logOut"><font-awesome-icon icon="arrow-right-from-bracket" />로그아웃</router-link></li>
+                    <li v-if="$store.state.loginChk"><router-link to="/profile" class="text-sm hover:text-indigo-600"><font-awesome-icon icon="pen-to-square" />정보수정</router-link></li>
+                    <li v-else><router-link to="/login" class="text-sm hover:text-indigo-600"> <font-awesome-icon icon="lock" /> 로그인</router-link></li>
+                    <li><router-link to="/member" class="text-sm hover:text-indigo-600"><font-awesome-icon icon="user" />회원가입</router-link></li>
                 </ul>
             </div>
         </div>
-        <div class="absolute right-4 md:right-8 top-6 duration-1000 transition-all z-50 cursor-pointer lg:hidden" @click="isOpen = !isOpen" :class="isOpen === true && 'on'">
+    <div class="absolute right-4 md:right-8 top-6 duration-1000 transition-all z-50 cursor-pointer lg:hidden" @click="isOpen = !isOpen" :class="isOpen === true && 'on'">
         <div v-for="e in 3" :key="e" class="w-[30px] h-0.5 bg-black rounded m-1.5 transition-all duration-1000"></div>
-        </div>
+    </div>
     <div class="w-80 h-full fixed bg-gray-50 z-40 p-12 box-border transition-all duration-500 top-0 lg:hidden overflow-y-scroll" :class="isOpen ? 'right-0':'-right-80'">
         <ul class="mt-12">
             <li class="py-5 border-b relative cursor-pointer font-bold" v-for="(e,index) in NavList[0]" :key="e" @click="NavSelectIndex = index; SubMenu(index)">{{ e }}<font-awesome-icon icon="chevron-down" class="transition-all duration-500 text-sx align-baseline absolute right-5 top-6" :class="NavSelectIndex === index && 'RotateClass'"/>
@@ -31,6 +33,13 @@
                     </ul>
                 </template>
             </li>
+        </ul>
+        <ul class="flex flex-wrap gap-x-4 mt-5">
+            <li class="basis-full" v-if="$store.state.loginChk"><span class="bold text-indigo-600 font-bold text-lg">{{ this.$store.state.displayName }}</span></li>
+            <li class="relative after:absolute after:w-0.5 after:h-3 after:-right-2 after:top-2 after:bg-gray-300" v-if="$store.state.loginChk"><router-link to="/" class="text-sm" @click="logOut">로그아웃</router-link></li>
+            <li class="relative after:absolute after:w-0.5 after:h-3 after:-right-2 after:top-2 after:bg-gray-300" v-if="$store.state.loginChk"><router-link to="/profile" class="text-sm">정보수정</router-link></li>
+            <li class="relative after:absolute after:w-0.5 after:h-3 after:-right-2 after:top-2 after:bg-gray-300" v-else><router-link to="/login" class="text-sm">로그인</router-link></li>
+            <li><router-link to="/member" class="text-sm">회원가입</router-link></li>
         </ul>
     </div>
     </div>

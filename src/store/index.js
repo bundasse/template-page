@@ -9,6 +9,8 @@ export default createStore({
       displayName:"",
       loginToken:null,
       noticeId:0,
+      galleryId:0,
+      qnaId:0,
       uid:""
     }
     //모든 영역?에서 쓸 수 있는 data변수같은거임. $store.state.number 식으로 가져가서 쓸수있다
@@ -45,6 +47,12 @@ export default createStore({
     },
     NoticeRead(state,payload){
       state.noticeId = payload
+    },
+    GalleryRead(state,payload){
+      state.galleryId = payload
+    },
+    QnaRead(state,payload){
+      state.qnaId = payload
     }
   },
   actions: {

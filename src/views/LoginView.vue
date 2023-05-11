@@ -37,7 +37,7 @@ export default {
                 console.log(user.user);
                 sessionStorage.setItem("refreshToken",user.user.refreshToken);
                 sessionStorage.setItem("displayName",user.user.displayName);
-                this.$store.commit("loginToken", {refreshToken:user.user.refreshToken, uid:user.user.uid});
+                this.$store.commit("loginToken", {refreshToken:user.user.refreshToken, uid:user.user.uid, displayName: user.user.displayName});
                 this.$router.replace('/'); //로그인되면 메인으로간다
             }),
             ((error)=>{

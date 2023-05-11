@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import MemberView from '../views/MemberView.vue'
+import ProfileView from '../views/ProfileView.vue'
 import CompanyView from '@/views/Company.vue'
 import Business from '../views/Business.vue'
 import Product from '../views/Product.vue'
@@ -22,8 +23,13 @@ import NoticeRead from '@/views/Service/NoticeRead.vue'
 import NoticeWrite from '@/views/Service/NoticeWrite.vue'
 import NoticeModify from '@/views/Service/NoticeModify.vue'
 import OnlineView from '@/views/Service/OnlineView.vue'
-import QnaView from '@/views/Service/QnaView.vue'
+import QnaView from '@/views/Service/QnAView.vue'
+import QnaList from '@/views/Service/QnAList.vue'
+import QnaWrite from '@/views/Service/QnAWrite.vue'
 import GalleryView from '@/views/Service/GalleryView.vue'
+import GalleryList from '@/views/Service/GalleryList.vue'
+import GalleryRead from '@/views/Service/GalleryRead.vue'
+import GalleryWrite from '@/views/Service/GalleryWrite.vue'
 
 const routes = [
   {
@@ -40,6 +46,11 @@ const routes = [
     path: '/member',
     name: 'member',
     component: MemberView
+  },
+  { 
+    path:'/profile',
+    name:'profile',
+    component: ProfileView
   },
   {
     path: '/company',
@@ -157,12 +168,43 @@ const routes = [
       {
         path: '/service/qna',
         name: 'qna',
-        component: QnaView
+        component: QnaView,
+        redirect:'/service/qna/list',
+        children:[
+          {
+            path:'/service/qna/list',
+            name:'qnalist',
+            component:QnaList
+          },
+          {
+            path:'/service/qna/write',
+            name:'qnawrite',
+            component:QnaWrite
+          },
+        ]
       },
       {
         path: '/service/gallery',
         name: 'gallery',
-        component: GalleryView
+        component: GalleryView,
+        redirect:'/service/gallery/list',
+        children:[
+          {
+            path:'/service/gallery/read',
+            name:'galleryread',
+            component: GalleryRead
+          },
+          {
+            path:'/service/gallery/write',
+            name:'gallerywrite',
+            component: GalleryWrite
+          },
+          {
+            path:'/service/gallery/list',
+            name:'gallerylist',
+            component: GalleryList
+          }
+        ]
       }
     ]
   },

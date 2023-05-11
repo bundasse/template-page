@@ -1,31 +1,24 @@
 <template>
     <div class="basis-full">
         <div class="max-w-7xl mx-auto my-10">
-            <ul class="flex justify-between border-t-indigo-500 border-t-2 bg-indigo-50 px-4 py-2 text-xs sm:text-sm text-center font-bold">
-                <li class="basis-10">번호</li>
-                <li class="basis-7/12">제목</li>
-                <li class="basis-16">글쓴이</li>
-                <li class="basis-12 ">조회수</li>
-                <li class="basis-24">추천 / 비추천</li>
-                <li class="basis-24">날짜</li>
-            </ul>
-            <template v-for="(e,index) in dataList" :key="index">
-                <ul v-if="calculateNumber(totalLength, perPage, page, index) >0" class="flex justify-between border-b border-gray-300 even:bg-gray-50 px-4 py-2 text-xs sm:text-sm">
-                    <li class="basis-10 text-center">{{ calculateNumber(totalLength, perPage, page, index) }}</li>
-                    <li class="basis-7/12">
-                        <router-link :to="{ name:'noticeread', query:{docId: dataId[index]} }" @click="$store.commit('NoticeRead', dataId[index])">{{ e.title }}</router-link>
-                    </li>
-                    <li class="basis-16 text-center">{{e.author}}</li>
-                    <li class="basis-12 text-center">{{ e.hit }}</li>
-                    <li class="basis-24 text-center">
-                        <span class="text-xs text-zinc-400"><font-awesome-icon icon="thumbs-up" /> {{ e.good }}  <font-awesome-icon icon="thumbs-down" /> {{ e.bad }}</span>
-                    </li>
-                    <li class="basis-24 text-center">{{BoardDate(index)}}</li>
-                </ul>
-            </template>
+            <div class="flex flex-wrap gap-x-2 gap-y-2">
+                <template v-for="(e,index) in dataList" :key="index">
+                    <ul v-if="calculateNumber(totalLength, perPage, page, index) >0" class="basis-full sm:basis-[49%] lg:basis-[32.5%] flex flex-wrap justify-between border rounded border-gray-300 p-2 text-xs sm:text-sm">
+                        <li class="basis-full hidden">{{ calculateNumber(totalLength, perPage, page, index) }}</li>
+                        <router-link :to="{ name:'galleryread', query:{docId: dataId[index]} }" @click="$store.commit('GalleryRead', dataId[index])" class="basis-full flex flex-wrap">
+                        <li class="basis-full"><img :src="e.file" :alt="e.title" class="w-full h-[200px] object-cover"></li>
+                        <li class="basis-full mt-3 mb-1 text-lg font-bold">
+                            {{ e.title }} <span class="text-xs text-zinc-400"><font-awesome-icon icon="thumbs-up" /> {{ e.good }}  <font-awesome-icon icon="thumbs-down" /> {{ e.bad }}</span>
+                        </li></router-link>
+                        <li class="relative after:absolute after:w-0.5 after:h-3 after:bg-gray-200 after:top-[6px] after:-right-2">작성자 {{e.author}}</li>
+                        <li class="relative after:absolute after:w-0.5 after:h-3 after:bg-gray-200 after:top-[6px] after:-right-2">조회수 {{ e.hit }}</li>
+                        <li class="basis-1/2">날짜 {{BoardDate(index)}}</li>
+                    </ul>
+                </template>
+            </div>
         </div>
         <div class="flex justify-end">
-            <router-link v-if="$store.state.loginToken != null" to="/service/notice/write" class="bg-indigo-400 hover:bg-indigo-600 focus:ring-indigo-400 py-2 px-4 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 text-xs sm:text-sm">글쓰기</router-link>
+            <router-link v-if="$store.state.loginToken != null" to="/service/gallery/write" class="bg-indigo-400 hover:bg-indigo-600 focus:ring-indigo-400 py-2 px-4 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 text-xs sm:text-sm">글쓰기</router-link>
         </div>
         <div class="flex justify-center basis-full gap-x-2 pb-24 items-center">
             <button @click="prevPage" :disabled="currentPage <= 1" class="font-bold">이전</button>
@@ -60,12 +53,12 @@ export default {
             return formattedDate
         },
         fetchTotalLength(){
-            db.collection("notice").get().then((data)=>{
+            db.collection("gallery").get().then((data)=>{
                 this.totalLength = data.size
             })
         },
         fetchPost(){
-            let query = db.collection("notice").orderBy("date","desc").limit(this.perPage)
+            let query = db.collection("gallery").orderBy("date","desc").limit(this.perPage)
             if(this.page>1 && this.lastVisible){
                 query = query.startAfter(this.lastVisible);
             }
@@ -78,16 +71,13 @@ export default {
                 })
                 this.dataId = ids;
                 this.dataList = items;
-                this.lastVisible = data.docs[data.docs.length - 1]; // -1을 주는 이유 : 배열의 첫번째는 0번째니까.
+                this.lastVisible = data.docs[data.docs.length - 1];
             })
         },
         calculateNumber(totalLength, perPage, page, index){
             const totalPages = perPage*(page-1);
-            //현재 페이지 이전의 게시물 수
             const postIndex = totalLength - (totalPages+index);
-            //이 게시물의 index 계산. 게시물 인덱스가 내림차순으로 표시될것
             if (postIndex <= 0){return}
-            //0보다 작거나 같으면 함수종료. 마지막 페이지에서 음수값이나 0값이 나오지 않게끔!
             return postIndex
         },
         prevPage(){
@@ -97,11 +87,8 @@ export default {
         },
         nextPage(){
             this.currentPage = this.currentPage +1;
-            //현재 블록 페이지번호를 1 증감
             this.page = this.pageCount.pagenation[0];
-            //배열에 추가된 첫번째 번호로 페이지 이동
             this.fetchPost()
-            //이동된 페이지의 게시글 호출
         },
         goToPage(e){
             this.page= e;
@@ -111,13 +98,9 @@ export default {
     computed:{
         pageCount(){
             const totalPage = Math.ceil(this.totalLength/this.perPage);
-            //전체 페이지 수 계산 : 전체 게시물 / 페이지 당 개수 하고 소수점 올림처리.
             const start = (this.currentPage -1)*this.block;
-            //현재 페이지에 보여질 게시물의 시작인덱스
             const end = start + this.block;
-            // 현재 페이지에 보여질 게시물의 끝인덱스
             const pagenation = [];
-            // 페이지 번호 배열로 만든다
             for(let i = start +1 ; i <=end && i <=totalPage; i++){
                 pagenation.push(i);
             }
