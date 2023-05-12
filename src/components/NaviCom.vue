@@ -21,12 +21,13 @@
                 </ul>
             </div>
         </div>
+    <!-- 모바일 내비게이션 -->
     <div class="absolute right-4 md:right-8 top-6 duration-1000 transition-all z-50 cursor-pointer lg:hidden" @click="isOpen = !isOpen" :class="isOpen === true && 'on'">
         <div v-for="e in 3" :key="e" class="w-[30px] h-0.5 bg-black rounded m-1.5 transition-all duration-1000"></div>
     </div>
     <div class="w-80 h-full fixed bg-gray-50 z-40 p-12 box-border transition-all duration-500 top-0 lg:hidden overflow-y-scroll" :class="isOpen ? 'right-0':'-right-80'">
         <ul class="mt-12">
-            <li class="py-5 border-b relative cursor-pointer font-bold" v-for="(e,index) in NavList[0]" :key="e" @click="NavSelectIndex = index; SubMenu(index)">{{ e }}<font-awesome-icon icon="chevron-down" class="transition-all duration-500 text-sx align-baseline absolute right-5 top-6" :class="NavSelectIndex === index && 'RotateClass'"/>
+            <li class="py-5 border-b relative cursor-pointer font-bold" v-for="(e,index) in NavList[0]" :key="e" @click="SubMenu(index)">{{ e }}<font-awesome-icon icon="chevron-down" class="transition-all duration-500 text-sx align-baseline absolute right-5 top-6" :class="NavSelectIndex === index && 'RotateClass'"/>
                 <template v-for="(e,i) in SubList" :key="e" >
                     <ul v-if="index === i" class="flex flex-wrap justify-between sub_list overflow-hidden transition-all duration-300" style="height: 0px;" :style="NavSelectIndex === index && `height:${subHeight}`">
                         <li v-for="(el,ind) in e" :key="el" class="basis-full text-xs hover:text-[#37a2d7]"><router-link :to="SubMenuLink[i][ind]" class="first-of-type:pt-5 pt-2 pl-5 inline-block w-full" @click="isOpen =false">{{ el }}</router-link></li>
@@ -46,7 +47,6 @@
 </template>
 <script>
 import {auth} from '../firebase'
-import { faFontAwesome } from '@fortawesome/free-solid-svg-icons';
 import data from '../assets/Data.json'
 export default {
     name: "NaviCom",
@@ -67,6 +67,7 @@ export default {
             this.windowWidth = window.innerWidth;
         },
         SubMenu(e){
+                this.NavSelectIndex = e;
                 const list = document.querySelectorAll(".sub_list")[e];
                 const length = list.querySelectorAll("li").length;
                 this.isSubMenu = `height:${length*44}px`;
@@ -96,8 +97,7 @@ export default {
     mounted() {
         window.addEventListener('resize', this.windowUpdateWidth)
         // mount되었을 때 윈도우 이벤트 추가 : 만약 사이즈가 변경되면 메소드 내 이벤트를 실행
-    },
-    components: { faFontAwesome }
+    }
 }
 </script>
 <style >

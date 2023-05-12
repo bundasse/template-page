@@ -16,7 +16,6 @@ export default{
   },
   mounted() {
     auth.onAuthStateChanged((user)=>{
-      console.log(user)
       if (user) {
         this.$store.commit('loginState',{displayName : user.displayName, uid: user.uid})
       }

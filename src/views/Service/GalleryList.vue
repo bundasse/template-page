@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto my-10">
             <div class="flex flex-wrap gap-x-2 gap-y-2">
                 <template v-for="(e,index) in dataList" :key="index">
-                    <ul v-if="calculateNumber(totalLength, perPage, page, index) >0" class="basis-full sm:basis-[49%] lg:basis-[32.5%] flex flex-wrap justify-between border rounded border-gray-300 p-2 text-xs sm:text-sm">
+                    <ul v-if="calculateNumber(totalLength, perPage, page, index) >0" class="basis-full sm:basis-[49%] lg:basis-[32.5%] flex flex-wrap gap-x-3 border rounded border-gray-300 p-2 text-xs sm:text-sm">
                         <li class="basis-full hidden">{{ calculateNumber(totalLength, perPage, page, index) }}</li>
                         <router-link :to="{ name:'galleryread', query:{docId: dataId[index]} }" @click="$store.commit('GalleryRead', dataId[index])" class="basis-full flex flex-wrap">
                         <li class="basis-full"><img :src="e.file" :alt="e.title" class="w-full h-[200px] object-cover"></li>

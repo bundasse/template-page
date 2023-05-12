@@ -5,7 +5,7 @@
         </div>
         <div class="w-full sm:w-1/2 lg:w-1/4 mx-auto flex flex-wrap justify-center mb-20 px-[2%] sm:px-0">
             <input class="border p-2 rounded basis-full mb-3" v-model="email" type="text" name="email" id="email" placeholder="이메일">
-            <input class="border p-2 rounded basis-full mb-10" v-model="password" type="password" name="password" id="password" placeholder="비밀번호">
+            <input class="border p-2 rounded basis-full mb-10" v-model="password" type="password" name="password" id="password" placeholder="비밀번호" @keyup.enter="login">
             <button @click="login()" class="rounded basis-full mb-1 hover:bg-blue-600 bg-blue-800 text-white font-bold p-2">로그인</button>
             <button class="underline text-gray-500 mx-auto text-sm">회원가입</button>
             <span class="text-sm text-rose-600">{{errorMsg}}</span>

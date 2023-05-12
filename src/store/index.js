@@ -51,7 +51,7 @@ export default createStore({
     GalleryRead(state,payload){
       state.galleryId = payload
     },
-    QnaRead(state,payload){
+    QnaWrite(state,payload){
       state.qnaId = payload
     }
   },
