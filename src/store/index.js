@@ -11,7 +11,8 @@ export default createStore({
       noticeId:0,
       galleryId:0,
       qnaId:0,
-      uid:""
+      uid:"",
+      kakaoArray: []
     }
     //모든 영역?에서 쓸 수 있는 data변수같은거임. $store.state.number 식으로 가져가서 쓸수있다
   },
@@ -43,6 +44,11 @@ export default createStore({
       state.loginToken = sessionStorage.getItem("refreshToken")
       state.uid = payload.uid
       state.displayName = payload.displayName
+      state.loginChk = true
+    },
+    kakaoLogin(state,payload){
+      state.kakaoArray = payload
+      state.loginToken = payload.res.data.access_token
       state.loginChk = true
     },
     NoticeRead(state,payload){

@@ -14,7 +14,17 @@ export default{
     Navi,
     Footer
   },
+  data() {
+    return {
+      displayName: sessionStorage.getItem("displayName"),
+      uid: sessionStorage.getItem("uid")
+    }
+  },
   mounted() {
+
+    if(sessionStorage.getItem("refreshToken")){
+      this.$store.commit('loginState',{displayName : this.displayName, uid: this.uid})
+    }
     auth.onAuthStateChanged((user)=>{
       if (user) {
         this.$store.commit('loginState',{displayName : user.displayName, uid: user.uid})
