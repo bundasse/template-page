@@ -16,8 +16,8 @@
             {{ BoardContent.content }}
             <img v-if="BoardContent.file" :src="BoardContent.file" alt="첨부파일" class="max-h-[500px]">
             <div class="w-48 mx-auto flex justify-between mt-10">
-                <button @click="goodChk()" class="w-20 py-2 rounded-md border-2 border-cyan-200 bg-white font-bold text-cyan-700 hover:border-cyan-400 hover:text-white hover:bg-cyan-400"> <span class="text-xl"><font-awesome-icon icon="thumbs-up" /></span><br/>추천</button>
-                <button @click="badChk()" class="w-20 py-2 rounded-md border-2 border-cyan-200 bg-white font-bold text-cyan-700 hover:border-cyan-400 hover:text-white hover:bg-cyan-400"> <span class="text-xl"><font-awesome-icon icon="thumbs-down" /></span><br/>비추천</button>
+                <button @click="GoodChk(0)" class="w-20 py-2 rounded-md border-2 border-cyan-200 bg-white font-bold text-cyan-700 hover:border-cyan-400 hover:text-white hover:bg-cyan-400"> <span class="text-xl"><font-awesome-icon icon="thumbs-up" /></span><br/>추천</button>
+                <button @click="GoodChk(1)" class="w-20 py-2 rounded-md border-2 border-cyan-200 bg-white font-bold text-cyan-700 hover:border-cyan-400 hover:text-white hover:bg-cyan-400"> <span class="text-xl"><font-awesome-icon icon="thumbs-down" /></span><br/>비추천</button>
             </div>
         </div>
         <div class="flex justify-between pb-24 mt-5">
@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-import {db} from '../../firebase';
+import {db, auth, storage} from '../../firebase';
 export default {
     name:"NoticeRead",
     data() {
@@ -47,13 +47,7 @@ export default {
         }
         db.collection("notice").doc(this.$route.query.docId).get().then((data)=>{
             this.BoardContent = data.data()
-            if(data.data().isUpdate){
-                return;
-            }
-            db.collection("notice").doc(this.$route.query.docId).update({
-                hit: data.data().hit+1,
-                isUpdate: true
-            })
+            this.HitUpdate()
         }).then(()=>{
             db.collection("notice").doc(this.$route.query.docId).get().then((update)=>{
                 this.BoardContent = update.data();
@@ -65,10 +59,21 @@ export default {
             })
         })
     },
+    computed:{
+        FileNameSplit(){
+            const parts = this.BoardContent.file.split("%2F")
+            let fileName = "";
+            if(this.BoardContent.file){
+                fileName = parts[parts.length-1].split("?")[0]
+            }
+            return fileName
+        }
+    },
     methods: {
         Delete(){
             let msg = confirm("삭제된 데이터는 복구할 수 없습니다 \r\r 삭제하시겠습니까?")
             if (msg){
+                storage.ref().child(`images/${this.FileNameSplit}`).delete()
                 db.collection("notice").doc(this.$route.query.docId).delete().then(() => {
                     alert("게시물이 삭제되었습니다.");
                     this.$router.replace("/service/notice")
@@ -77,28 +82,72 @@ export default {
                 });
             }
         },
-        goodChk(){
-            if(this.BoardContent.goodChk === true){
-                alert("이미 평가한 글입니다.");
-                return
-            }
-            db.collection("notice").doc(this.$route.query.docId).update({
-                good: this.BoardContent.good + 1,
-                goodChk : true
-            }).then(()=>{
-                db.collection("notice").doc(this.$route.query.docId).get().then((data)=>{this.BoardContent = data.data()})
+        HitUpdate(){
+            const user = auth.currentUser;
+            db.collection("users").doc(user.uid).get().then(doc=>{
+                // exists : 해당 정보를 가지고 있는지?
+                if (!doc.exists){
+                    db.collection("users").doc(user.uid).set({
+                        hit: {}
+                    }).then(()=>{
+                        this.UpdateHit();
+                    })
+                }else{
+                    this.UpdateHit();
+                }
             })
         },
-        badChk(){
-            if(this.BoardContent.goodChk === true){
-                alert("이미 평가한 글입니다.");
-                return
-            }
-            db.collection("notice").doc(this.$route.query.docId).update({
-                bad: this.BoardContent.bad + 1,
-                goodChk : true
-            }).then(()=>{
-                db.collection("notice").doc(this.$route.query.docId).get().then((data)=>{this.BoardContent = data.data()})
+        UpdateHit(){
+            const user = auth.currentUser;
+            db.collection("users").doc(user.uid).get().then(doc=>{
+                const userData = doc.data();
+                if(userData.hitChk && userData.hitChk[this.$route.query.docId]){
+                    return;
+                }
+                const updateData = this.BoardContent.hit+1;
+                db.collection("notice").doc(this.$route.query.docId).update({hit:updateData}).then(()=>{
+                    userData.hitChk = userData.hitChk || {};
+                    userData.hitChk[this.$route.query.docId] = true;
+                    db.collection("users").doc(user.uid).set(userData).then(()=>{
+                        db.collection("notice").doc(this.$route.query.docId).get().then((data)=>{
+                            this.BoardContent = data.data()
+                        })
+                    })
+                })
+            })
+        },
+        GoodChk(e){
+            const user = auth.currentUser;
+            db.collection("users").doc(user.uid).get().then(doc=>{
+                // exists : 해당 정보를 가지고 있는지?
+                if (!doc.exists){
+                    db.collection("users").doc(user.uid).set({
+                        goodChk: {}
+                    }).then(()=>{
+                        this.GoodChk();
+                    })
+                }else{
+                    const userData = doc.data();
+                    if(userData.goodChk && userData.goodChk[this.$route.query.docId]){
+                        alert("이미 추천/비추천한 게시글입니다.");
+                        return;
+                    }
+                    const updateField = e ===0? 'good': 'bad';
+                    const updateData = {}
+                    updateData[updateField] = this.BoardContent[updateField]+1;
+                    //추천 누르면 this.BoardContent['good'] 에 +1, 비추천 누르면 'bad'에 +1
+                    db.collection("notice").doc(this.$route.query.docId).update(updateData).then(()=>{
+                        //사용자가 추천/비추천 눌렀을 때 해당 문서에 데이터 업데이트
+                        userData.goodChk = userData.goodChk || {};
+                        // 이미 goodChk값이 있다면 이전 값을 유지하고, 없다면 빈 객체를 할당.
+                        userData.goodChk[this.$route.query.docId] = true;
+                        db.collection("users").doc(user.uid).set(userData).then(()=>{
+                            db.collection("notice").doc(this.$route.query.docId).get().then((data)=>{
+                                this.BoardContent = data.data()
+                            })
+                        })
+                    })
+                }
             })
         }
     }
